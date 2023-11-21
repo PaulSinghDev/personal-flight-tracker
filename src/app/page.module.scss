@@ -1,0 +1,191 @@
+$blue: #4169e1;
+$green: #3dba5b;
+$red: #b1192b;
+
+@mixin button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  font-size: 16px;
+  margin-top: 8px;
+  max-width: 200px;
+  margin: auto;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: $blue;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  min-height: 100vh;
+}
+
+.input-wrapper {
+  padding: 12px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  margin: 8px 0;
+  label {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+
+    input {
+      margin-top: 4px;
+      font-size: 18px;
+      padding: 12px;
+      border-radius: 4px;
+      border: none;
+    }
+  }
+}
+
+.submit {
+  @include button;
+  color: #fff;
+  font-size: 18px;
+  background-color: $green;
+}
+
+.remove {
+  @include button;
+  color: #fff;
+  background-color: $red;
+  margin: auto;
+}
+
+.flight-list-wrapper {
+  padding: 12px;
+  max-width: 800px;
+  width: 100%;
+}
+
+.flight-list {
+  list-style: none;
+  max-width: 100%;
+}
+
+.flight {
+  padding: 12px;
+  margin: 16px 8px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+
+  &.partial {
+    padding: 0;
+  }
+}
+
+.partial-details {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.flight-number {
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 12px;
+
+  > span:first-of-type {
+    background-color: $blue;
+    display: inline-block;
+    padding: 4px 8px;
+    color: #fff;
+    margin-right: 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+  }
+
+  > span:last-of-type {
+    font-weight: bold;
+  }
+}
+
+.flight-date {
+  font-size: 20px;
+  text-decoration: underline;
+  text-decoration-color: $blue;
+}
+
+.route {
+  overflow: auto;
+  padding-bottom: 8px;
+  display: flex;
+  margin-right: auto;
+  max-width: 100%;
+  flex-direction: column;
+
+  .label {
+    font-size: 14px;
+    font-weight: 300;
+  }
+}
+
+.flight-detail {
+  margin: 4px 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 10px;
+    background-color: $green;
+    color: #fff;
+    padding: 6px;
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .detail {
+    display: flex;
+    align-items: center;
+
+    .full {
+      margin: 4px;
+      font-size: 12px;
+    }
+    .code {
+      margin: 4px;
+      font-weight: bold;
+    }
+  }
+}
+
+.notice {
+  background-color: $red;
+  padding: 12px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+  color: #fff;
+}
