@@ -32,6 +32,8 @@ $red: #b1192b;
   padding: 12px;
   width: 100%;
   max-width: 500px;
+  background-color: #fff;
+  border-radius: 8px;
 }
 
 .inputs {
@@ -188,4 +190,22 @@ $red: #b1192b;
   border-radius: 8px 8px 0 0;
   text-align: center;
   color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .input-wrapper {
+    background-color: #333;
+    input {
+      background-color: rgb(100, 100, 100);
+      color: #f2f2f2;
+    }
+  }
+
+  .flight {
+    background-color: #333;
+  }
+
+  .flight-number {
+    border-bottom: 1px solid rgba(200, 200, 200, 0.4);
+  }
 }
