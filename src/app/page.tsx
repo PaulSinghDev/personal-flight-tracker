@@ -323,13 +323,16 @@ const Home = () => {
       </header>
       <div className={styles["input-wrapper"]}>
         <h2>Enter flight details:</h2>
-        <form className={styles["inputs"]}>
+        <form className={styles["inputs"]} onSubmit={handleSubmit}>
           <div className={styles.input}>
             <label>
               Flight Number:
               <input
+                required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setFlightNumber(e.target.value.replace(/\s/g, ""));
+                  setFlightNumber(
+                    e.target.value.replace(/\s/g, "").toUpperCase()
+                  );
                   console.log(flightNumber);
                 }}
                 type="text"
@@ -341,8 +344,9 @@ const Home = () => {
             <label>
               From:
               <input
+                required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setAirport(e.target.value.replace(/\s/g, ""));
+                  setAirport(e.target.value.replace(/\s/g, "").toUpperCase());
                 }}
                 type="text"
                 name="from"
@@ -353,8 +357,9 @@ const Home = () => {
             <label>
               To:
               <input
+                required
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setToAirport(e.target.value.replace(/\s/g, ""));
+                  setToAirport(e.target.value.replace(/\s/g, "").toUpperCase());
                 }}
                 type="text"
                 name="to"
@@ -365,6 +370,8 @@ const Home = () => {
             <label>
               Take-off (YYYY-MM-DD):
               <input
+                required
+                pattern="^\d{4}-\d{2}-\d{2}$"
                 type="text"
                 name="flight_dept"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -374,9 +381,7 @@ const Home = () => {
               />
             </label>
           </div>
-          <button onClick={handleSubmit} className={styles.submit}>
-            Submit
-          </button>
+          <button className={styles.submit}>Submit</button>
         </form>
       </div>
       <div className={styles["flight-list-wrapper"]}>
