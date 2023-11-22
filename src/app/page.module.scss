@@ -28,6 +28,10 @@ $red: #b1192b;
   min-height: 100vh;
 }
 
+.steps {
+  margin-top: 12px;
+}
+
 .header {
   padding: 24px;
   max-width: 600px;
@@ -41,7 +45,7 @@ $red: #b1192b;
 
 .input-wrapper {
   padding: 24px;
-  width: calc(100% - 68px);
+  width: 100%;
   max-width: 600px;
   background-color: #fff;
   border-radius: 8px;
@@ -88,7 +92,7 @@ $red: #b1192b;
 }
 
 .flight-list-wrapper {
-  padding: 24px;
+  margin: 24px 0;
   max-width: 600px;
   width: 100%;
 }
@@ -100,7 +104,7 @@ $red: #b1192b;
 
 .flight {
   padding: 12px;
-  margin: 16px 8px;
+  margin: 16px 0;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);

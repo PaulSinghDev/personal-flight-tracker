@@ -18,30 +18,31 @@ const getFlightDay = (date: string) =>
 
 export async function POST(request: Request) {
   const data = await request.json();
-
+  const apiKey = data.apiKey || process.env.FLIGHT_API_KEY;
+  console.log(apiKey);
   // flight details
   const flightRequest = fetch(
-    `${process.env.FLIGHT_API_BASE_URI}/routes?api_key=${process.env.FLIGHT_API_KEY}&flight_iata=${data.flightNumber}&dep_iata=${data.fromAirport}&arr_iata=${data.toAirport}`
+    `${process.env.FLIGHT_API_BASE_URI}/routes?api_key=${apiKey}&flight_iata=${data.flightNumber}&dep_iata=${data.fromAirport}&arr_iata=${data.toAirport}`
   );
 
   // departure airport details
   const fromAirportRequest = fetch(
-    `${process.env.FLIGHT_API_BASE_URI}/airports?api_key=${process.env.FLIGHT_API_KEY}&iata_code=${data.fromAirport}`
+    `${process.env.FLIGHT_API_BASE_URI}/airports?api_key=${apiKey}&iata_code=${data.fromAirport}`
   );
 
   // destination airport details
   const toAirportRequest = fetch(
-    `${process.env.FLIGHT_API_BASE_URI}/airports?api_key=${process.env.FLIGHT_API_KEY}&iata_code=${data.toAirport}`
+    `${process.env.FLIGHT_API_BASE_URI}/airports?api_key=${apiKey}&iata_code=${data.toAirport}`
   );
 
   // departure city details
   const fromCityRequest = fetch(
-    `${process.env.FLIGHT_API_BASE_URI}/cities?api_key=${process.env.FLIGHT_API_KEY}&city_code=${data.fromAirport}`
+    `${process.env.FLIGHT_API_BASE_URI}/cities?api_key=${apiKey}&city_code=${data.fromAirport}`
   );
 
   // arrival city details
   const toCityRequest = fetch(
-    `${process.env.FLIGHT_API_BASE_URI}/cities?api_key=${process.env.FLIGHT_API_KEY}&city_code=${data.toAirport}`
+    `${process.env.FLIGHT_API_BASE_URI}/cities?api_key=${apiKey}&city_code=${data.toAirport}`
   );
 
   const requests = await Promise.all([
@@ -57,58 +58,79 @@ export async function POST(request: Request) {
   const resolvedResponses = await Promise.all(responsePromises);
 
   const flightResponse: GenericApiResponseType<FlightDetailsType[]> =
-    resolvedResponses.find((response) => response.request.method === "routes");
+    resolvedResponses.find(
+      (response) => response?.request?.method === "routes"
+    );
 
   const fromAirportResponse: GenericApiResponseType<AirportDetailsType[]> =
     resolvedResponses.find(
       (response) =>
-        response.request.method === "airports" &&
+        response?.request?.method === "airports" &&
         response.request.params.iata_code === data.fromAirport
     );
 
   const toAirportResponse: GenericApiResponseType<AirportDetailsType[]> =
     resolvedResponses.find(
       (response) =>
-        response.request.method === "airports" &&
+        response?.request?.method === "airports" &&
         response.request.params.iata_code === data.toAirport
     );
 
   const fromCityResponse = resolvedResponses.find(
     (response) =>
-      response.request.method === "cities" &&
+      response?.request?.method === "cities" &&
       response.request.params.city_code === data.fromAirport
   );
 
   const toCityResponse = resolvedResponses.find(
     (response) =>
-      response.request.method === "cities" &&
+      response?.request?.method === "cities" &&
       response.request.params.city_code === data.toAirport
   );
 
-  // Nothing for flight then something is wrong
-  if (!flightResponse?.response) {
-    return NextResponse.json(
-      { errors: ["NO_RESPONSE"], data: null },
-      { status: 200 }
-    );
-  }
-
-  // Get the flight which correlates to the date the user entered by filtering
-  // from the take-off days and matching to the day of the flight the user asked for
-  let flightObject: FlightDetailsType | BasicFlightDetails | undefined =
-    flightResponse.response.find((item: FlightDetailsType) =>
-      item.days?.includes(getFlightDay(data.departure))
-    );
-
-  // No flight object, something is wrong
-  if (!flightObject) {
-    flightObject = {
+  const basicFlightObject: FlightDetailsType | BasicFlightDetails | undefined =
+    {
       dep_iata: data.fromAirport,
       arr_iata: data.fromAirport,
       departure: data.departure,
       flight_iata: data.flightNumber,
       isBasic: true,
     };
+
+  // Nothing for flight then something is wrong
+  if (!flightResponse?.response) {
+    return NextResponse.json(
+      {
+        errors: [],
+        data: {
+          flight: {
+            ...basicFlightObject,
+          },
+        },
+      },
+      { status: 200 }
+    );
+  }
+
+  // Get the flight which correlates to the date the user entered by filtering
+  // from the take-off days and matching to the day of the flight the user asked for
+  const flightObject = flightResponse.response.find((item: FlightDetailsType) =>
+    item.days?.includes(getFlightDay(data.departure))
+  );
+
+  // No flight object, something is wrong
+  if (!flightObject) {
+    return NextResponse.json(
+      {
+        errors: [],
+        data: {
+          flight: {
+            ...basicFlightObject,
+          },
+        },
+      },
+      { status: 200 }
+    );
   } else {
     flightObject.isBasic = false;
   }
