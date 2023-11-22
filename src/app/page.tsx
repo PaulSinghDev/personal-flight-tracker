@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.scss";
 import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
 import { MdTimer } from "react-icons/md";
+import Link from "next/link";
 
 export type FlightDetailsType = {
   airline_iata: string;
@@ -289,6 +290,37 @@ const Home = () => {
 
   return (
     <main className={styles.main}>
+      <header className={styles.header}>
+        <h1>Personal Flight Tracker</h1>
+        <div className={styles.info}>
+          <p>
+            A simple app to keep track of you personal flights. The motivation
+            behind making this was simply that I cannot be arsed with logging
+            into multiple different websites to keep track of flights from
+            different vendors.
+          </p>
+          <p>
+            App made using{" "}
+            <Link
+              href="https://airlabs.co"
+              rel="noopeneer noreferrer"
+              target="_blank"
+              title="Visit Airlabs in a new tab"
+            >
+              Air Labs
+            </Link>
+          </p>
+          <p>
+            <small>
+              The data shown here may not be accurate due to limitations of the
+              free API provided by Air Labs. Most notable is the fact that the
+              API will not show specific flights for specific dates. As such
+              this app is piecing together multiple different end points to make
+              a best guess.
+            </small>
+          </p>
+        </div>
+      </header>
       <div className={styles["input-wrapper"]}>
         <h2>Enter flight details:</h2>
         <form className={styles["inputs"]}>
