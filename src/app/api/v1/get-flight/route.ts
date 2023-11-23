@@ -1,8 +1,9 @@
 import {
   AirportDetailsType,
-  BasicFlightDetails,
-  FlightDetailsType,
-} from "@/app/page";
+  BasicFlightDetailsType,
+  CityDetailsType,
+  FullFlightDetailsType,
+} from "@/types/flightDetails";
 import { NextResponse } from "next/server";
 
 type GenericApiResponseType<T> = {
@@ -19,7 +20,6 @@ const getFlightDay = (date: string) =>
 export async function POST(request: Request) {
   const data = await request.json();
   const apiKey = data.apiKey || process.env.FLIGHT_API_KEY;
-  console.log(apiKey);
   // flight details
   const flightRequest = fetch(
     `${process.env.FLIGHT_API_BASE_URI}/routes?api_key=${apiKey}&flight_iata=${data.flightNumber}&dep_iata=${data.fromAirport}&arr_iata=${data.toAirport}`
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
   const resolvedResponses = await Promise.all(responsePromises);
 
-  const flightResponse: GenericApiResponseType<FlightDetailsType[]> =
+  const flightResponse: GenericApiResponseType<FullFlightDetailsType[]> =
     resolvedResponses.find(
       (response) => response?.request?.method === "routes"
     );
@@ -76,26 +76,30 @@ export async function POST(request: Request) {
         response.request.params.iata_code === data.toAirport
     );
 
-  const fromCityResponse = resolvedResponses.find(
-    (response) =>
-      response?.request?.method === "cities" &&
-      response.request.params.city_code === data.fromAirport
-  );
+  const fromCityResponse: GenericApiResponseType<CityDetailsType[]> =
+    resolvedResponses.find(
+      (response) =>
+        response?.request?.method === "cities" &&
+        response.request.params.city_code === data.fromAirport
+    );
 
-  const toCityResponse = resolvedResponses.find(
-    (response) =>
-      response?.request?.method === "cities" &&
-      response.request.params.city_code === data.toAirport
-  );
+  const toCityResponse: GenericApiResponseType<CityDetailsType[]> =
+    resolvedResponses.find(
+      (response) =>
+        response?.request?.method === "cities" &&
+        response.request.params.city_code === data.toAirport
+    );
 
-  const basicFlightObject: FlightDetailsType | BasicFlightDetails | undefined =
-    {
-      dep_iata: data.fromAirport,
-      arr_iata: data.fromAirport,
-      departure: data.departure,
-      flight_iata: data.flightNumber,
-      isBasic: true,
-    };
+  const basicFlightObject:
+    | FullFlightDetailsType
+    | BasicFlightDetailsType
+    | undefined = {
+    dep_iata: data.fromAirport,
+    arr_iata: data.fromAirport,
+    departure: data.departure,
+    flight_iata: data.flightNumber,
+    isBasic: true,
+  };
 
   // Nothing for flight then something is wrong
   if (!flightResponse?.response) {
@@ -114,8 +118,9 @@ export async function POST(request: Request) {
 
   // Get the flight which correlates to the date the user entered by filtering
   // from the take-off days and matching to the day of the flight the user asked for
-  const flightObject = flightResponse.response.find((item: FlightDetailsType) =>
-    item.days?.includes(getFlightDay(data.departure))
+  const flightObject = flightResponse.response.find(
+    (item: FullFlightDetailsType) =>
+      item.days?.includes(getFlightDay(data.departure))
   );
 
   // No flight object, something is wrong
@@ -144,10 +149,12 @@ export async function POST(request: Request) {
     toAirportResponse?.response?.[0];
 
   // Departure airport
-  const fromCityObject: any = fromCityResponse?.response?.[0];
+  const fromCityObject: CityDetailsType | undefined =
+    fromCityResponse?.response?.[0];
 
   // Destination airport
-  const toCityObject: any = toCityResponse?.response?.[0];
+  const toCityObject: CityDetailsType | undefined =
+    toCityResponse?.response?.[0];
 
   // Get a dirty date time string using the user's desired date due to free API limitations
   const flightDateTime = !flightObject.isBasic
