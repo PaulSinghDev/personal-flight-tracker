@@ -1,0 +1,126 @@
+.default {
+  padding: 12px;
+  margin: 16px 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  color: #111;
+}
+
+.flight-number {
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 12px;
+
+  > span:first-of-type {
+    background-color: $blue;
+    display: inline-block;
+    padding: 4px 8px;
+    color: #fff;
+    margin-right: 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+  }
+
+  > span:last-of-type {
+    font-weight: bold;
+  }
+}
+
+.flight-date {
+  font-size: 20px;
+  text-decoration: underline;
+  text-decoration-color: $blue;
+}
+
+.flight-detail {
+  margin: 4px 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 10px;
+    background-color: $green;
+    color: #fff;
+    padding: 6px;
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .detail {
+    display: flex;
+    align-items: center;
+
+    .full {
+      margin: 4px;
+      font-size: 12px;
+    }
+    .code {
+      margin: 4px;
+      font-weight: bold;
+    }
+  }
+}
+
+.route {
+  overflow: auto;
+  padding-bottom: 8px;
+  display: flex;
+  margin-right: auto;
+  max-width: 100%;
+  flex-direction: column;
+
+  .label {
+    font-size: 14px;
+    font-weight: 300;
+  }
+}
+
+.notice {
+  background-color: $red;
+  padding: 12px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+  color: #fff;
+}
+
+.remove {
+  color: #fff;
+  background-color: $red;
+  border-color: $red;
+  margin: auto;
+}
+
+.partial-details {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.partial {
+  padding: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .default {
+    background-color: #333;
+    color: #f2f2f2;
+  }
+
+  .flight-number {
+    border-bottom: 1px solid rgba(200, 200, 200, 0.4);
+  }
+}
